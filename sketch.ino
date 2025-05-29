@@ -9,6 +9,7 @@ const int DHT_PIN = 15;
 const int SMOKE_PIN = 34;  
 const int LED_PIN = 21;
 const int BUZZER_PIN = 22;
+bool Alarm = false;
 
 DHTesp dhtSensor;
 
@@ -84,15 +85,13 @@ void callback(char* topic, byte* payload, unsigned int length){
   Serial.println(message);
 
   String topicStr = String(topic);
-  if(topicStr == "IPB/IoT/54448_54944/ponto1/control"){
-    if(message == "ALARM_ON"){
-      digitalWrite(LED_PIN, HIGH);
-      digitalWrite(BUZZER_PIN, HIGH);
-      Serial.println("Alarme ativo");
-    }else if(message == "ALARM_OFF"){
-      digitalWrite(LED_PIN, LOW);
-      digitalWrite(BUZZER_PIN, LOW);
-      Serial.println("Alarme desativado");
+  if (String(topic) == "IPB/IoT/54448_54944/ponto1/control") {
+    if (message.indexOf("ALARM_ON") >= 0) { //procura a palavra chave na mensagem
+      Alarm = true;
+    } else if (message.indexOf("ALARM_OFF") >= 0) {
+      Alarm = false;
+    } else {
+      Serial.println(">> Nenhum comando ALARM reconhecido na mensagem.");
     }
   }
 }
@@ -105,6 +104,17 @@ void loop() {
 
   TempAndHumidity data = dhtSensor.getTempAndHumidity();
   int sensorFumo = analogRead(SMOKE_PIN);
+
+  //Ligar/desligar Led e Buzzer
+  if (Alarm) {
+    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH);
+    Serial.println(">> Alarme ativo: LED e buzzer ligados");
+  } else {
+    digitalWrite(LED_PIN, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
+    Serial.println(">> Alarme inativo: LED e buzzer desligados");
+  }
 
   // Construir JSON
   String json = "{";
