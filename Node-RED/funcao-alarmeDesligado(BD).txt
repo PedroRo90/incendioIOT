@@ -1,0 +1,6 @@
+msg.payload = [{
+  measurement: "estado_alarme",
+  fields: { ativo: 0 },
+  tags: { origem: "esp32", tipo: "alarme" }
+}];
+return msg;

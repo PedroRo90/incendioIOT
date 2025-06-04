@@ -1,0 +1,2 @@
+msg.payload = `Temp: ${msg.temperatura} ºC | Gás: ${msg.gas} ppm | Local: ${msg.payload.lat}, ${msg.payload.lon}`;
+return msg;

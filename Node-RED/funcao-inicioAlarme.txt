@@ -1,0 +1,14 @@
+flow.set("inicio", new Date().getTime());
+
+let mensagem = {
+    payload: "ALARM_ON , Alarme iniciado às " + new Date().toLocaleString()
+};
+
+let mqtt = {
+    payload: "ALARM_ON",
+    topic: "IPB/IoT/54448_54944/ponto1/control"
+};
+
+return [mensagem, mqtt];
+
+

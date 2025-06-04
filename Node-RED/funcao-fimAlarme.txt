@@ -1,0 +1,25 @@
+let inicio = flow.get("inicio");
+if (!inicio) return null;
+
+let temperatura = msg.temperatura;
+let gas = msg.gas;
+
+if ((temperatura === undefined || temperatura < 40) && (gas === undefined || gas < 2000)) {
+    let fim = new Date().getTime();
+    let duracao = ((fim - inicio) / 1000).toFixed(1);
+
+    let mensagem = {
+        payload: `Alarme TERMINADO às ${new Date().toLocaleString()} (Duração: ${duracao} segundos)`
+    };
+
+    flow.set("inicio", null);
+
+    let mqtt = {
+        payload: "ALARM_OFF",
+        topic: "IPB/IoT/54448_54944/ponto1/control"
+    };
+
+    return [mensagem, mqtt];
+}
+
+return null;

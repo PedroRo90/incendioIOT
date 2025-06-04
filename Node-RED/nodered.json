@@ -1,0 +1,626 @@
+[
+    {
+        "id": "e4c3d40f65b44d55",
+        "type": "tab",
+        "label": "Projeto - Sistema de Detecção de Incêndios",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1cc075b72b84d598",
+        "type": "mqtt in",
+        "z": "e4c3d40f65b44d55",
+        "name": "",
+        "topic": "IPB/IoT/54448_54944/ponto1",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "dd399c0a6b8173a5",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "4897b542e75b5f6c",
+                "f1d4e4b5c68c2f9b"
+            ]
+        ]
+    },
+    {
+        "id": "6572ae71171f2ce6",
+        "type": "ui_gauge",
+        "z": "e4c3d40f65b44d55",
+        "name": "",
+        "group": "8",
+        "order": 15,
+        "width": "0",
+        "height": "0",
+        "gtype": "gage",
+        "title": "Temperatura",
+        "label": "ºC",
+        "format": "{{msg.temperatura}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 650,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "4828b54deb9a123a",
+        "type": "ui_gauge",
+        "z": "e4c3d40f65b44d55",
+        "name": "",
+        "group": "8",
+        "order": 16,
+        "width": "0",
+        "height": "0",
+        "gtype": "gage",
+        "title": "Humidade",
+        "label": "%",
+        "format": "{{msg.humidade}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 650,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "42ea5931db8392e3",
+        "type": "ui_gauge",
+        "z": "e4c3d40f65b44d55",
+        "name": "",
+        "group": "8",
+        "order": 16,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gas",
+        "label": "ppm",
+        "format": "{{msg.gas}}",
+        "min": 0,
+        "max": "1000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 670,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4897b542e75b5f6c",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Dados",
+        "func": "msg.coordenadas = `${msg.payload.lat}, ${msg.payload.lon}`;\nmsg.temperatura = msg.payload.temperatura;\nmsg.humidade = msg.payload.humidade;\nmsg.gas = msg.payload.gas;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 180,
+        "wires": [
+            [
+                "6572ae71171f2ce6",
+                "4828b54deb9a123a",
+                "42ea5931db8392e3",
+                "7cfdf938bbe1170e",
+                "1f3e6db9dc15409b",
+                "eb69935bace25cf1",
+                "bbe0286efdf15479",
+                "6a28b26a335d0993"
+            ]
+        ]
+    },
+    {
+        "id": "7cfdf938bbe1170e",
+        "type": "ui_text",
+        "z": "e4c3d40f65b44d55",
+        "group": "8",
+        "order": 21,
+        "width": "0",
+        "height": "0",
+        "name": "",
+        "label": "Localização",
+        "format": "{{msg.coordenadas}}",
+        "layout": "row-left",
+        "className": "",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 650,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "1f3e6db9dc15409b",
+        "type": "switch",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alerta temperatura",
+        "property": "temperatura",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "40",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 630,
+        "y": 280,
+        "wires": [
+            [
+                "b663a6cde3eb9873",
+                "2f474ec86681fb5d",
+                "ad44eebad1a88516"
+            ]
+        ]
+    },
+    {
+        "id": "b663a6cde3eb9873",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alerta",
+        "func": "msg.payload = `ALERTA!\nTemperatura: ${msg.temperatura} °C\nGás: ${msg.gas} ppm;\nLocal: ${msg.coordenadas}`;\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 300,
+        "wires": [
+            [
+                "01d5a0465ceea384"
+            ]
+        ]
+    },
+    {
+        "id": "01d5a0465ceea384",
+        "type": "ui_toast",
+        "z": "e4c3d40f65b44d55",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 1070,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "8bbbb4e4fc165bbd",
+        "type": "ui_text",
+        "z": "e4c3d40f65b44d55",
+        "group": "8",
+        "order": 19,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Ultimo alerta",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1090,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2f474ec86681fb5d",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Ultimo alerta",
+        "func": "\nmsg.payload = `Temp: ${msg.temperatura} ºC | Gás: ${msg.gas} ppm | Local: ${msg.payload.lat}, ${msg.payload.lon}`;\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 360,
+        "wires": [
+            [
+                "8bbbb4e4fc165bbd"
+            ]
+        ]
+    },
+    {
+        "id": "ad44eebad1a88516",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Inicio do alarme",
+        "func": "flow.set(\"inicio\", new Date().getTime());\n\nlet mensagem = {\n    payload: \"ALARM_ON , Alarme iniciado às \" + new Date().toLocaleString()\n};\n\nlet mqtt = {\n    payload: \"ALARM_ON\",\n    topic: \"IPB/IoT/54448_54944/ponto1/control\"\n};\n\nreturn [mensagem, mqtt];\n\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 440,
+        "wires": [
+            [
+                "504210d04e4b066b",
+                "f953656dd13d389c",
+                "bc34d5f05c9e1bfa"
+            ]
+        ]
+    },
+    {
+        "id": "504210d04e4b066b",
+        "type": "ui_text",
+        "z": "e4c3d40f65b44d55",
+        "group": "8",
+        "order": 20,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Inicio do alarme",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1120,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "eb69935bace25cf1",
+        "type": "switch",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alerta gas",
+        "property": "gas",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "2000",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 560,
+        "y": 380,
+        "wires": [
+            [
+                "b663a6cde3eb9873",
+                "2f474ec86681fb5d",
+                "ad44eebad1a88516"
+            ]
+        ]
+    },
+    {
+        "id": "f1d4e4b5c68c2f9b",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "InfluxDB",
+        "func": "let data = msg.payload;\n\nlet temperatura = data.temperatura || data.temp;\nlet humidade = data.humidade || data.hum;\nlet gas = data.gas || data.g;\n\nmsg.payload = [{\n  measurement: \"sensores 1\",\n  fields: {\n    temperatura: temperatura,\n    humidade: humidade,\n    gas: gas\n  },\n  tags: {\n    origem: \"esp32\",\n    location: msg.topic === \"IPB/IoT/54448_54944/ponto1\" ? \"local\" : \"desconhecido\"\n  }\n}];\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 540,
+        "wires": [
+            [
+                "366d2570631a5185"
+            ]
+        ]
+    },
+    {
+        "id": "366d2570631a5185",
+        "type": "influxdb batch",
+        "z": "e4c3d40f65b44d55",
+        "influxdb": "336dadb703d0cd10",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "Receber dados",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "EscolaA54448",
+        "bucket": "Projeto_incendio",
+        "x": 1000,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "bbe0286efdf15479",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Fim do alarme",
+        "func": "let inicio = flow.get(\"inicio\");\nif (!inicio) return null;\n\nlet temperatura = msg.temperatura;\nlet gas = msg.gas;\n\nif ((temperatura === undefined || temperatura < 40) && (gas === undefined || gas < 2000)) {\n    let fim = new Date().getTime();\n    let duracao = ((fim - inicio) / 1000).toFixed(1);\n\n    let mensagem = {\n        payload: `Alarme TERMINADO às ${new Date().toLocaleString()} (Duração: ${duracao} segundos)`\n    };\n\n    flow.set(\"inicio\", null);\n\n    let mqtt = {\n        payload: \"ALARM_OFF\",\n        topic: \"IPB/IoT/54448_54944/ponto1/control\"\n    };\n\n    return [mensagem, mqtt];\n}\n\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 420,
+        "wires": [
+            [
+                "d12b1fcb79e07b26",
+                "600d145ad00328d2",
+                "c1e4698de82718ae"
+            ]
+        ]
+    },
+    {
+        "id": "d12b1fcb79e07b26",
+        "type": "ui_text",
+        "z": "e4c3d40f65b44d55",
+        "group": "8",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Fim do alarme",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 580,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "f953656dd13d389c",
+        "type": "mqtt out",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alarme ON",
+        "topic": "IPB/IoT/54448_54944/ponto1/control",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "dd399c0a6b8173a5",
+        "x": 1110,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "600d145ad00328d2",
+        "type": "mqtt out",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alarme OFF",
+        "topic": "IPB/IoT/54448_54944/ponto1/control",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "dd399c0a6b8173a5",
+        "x": 590,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "ad1905de040c7bd0",
+        "type": "ui_chart",
+        "z": "e4c3d40f65b44d55",
+        "name": "",
+        "group": "8",
+        "order": 30,
+        "width": 0,
+        "height": 0,
+        "label": "Grafico temperatura",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1140,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6a28b26a335d0993",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Grafico temperatura",
+        "func": "msg.payload = msg.temperatura;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 140,
+        "wires": [
+            [
+                "ad1905de040c7bd0"
+            ]
+        ]
+    },
+    {
+        "id": "bc34d5f05c9e1bfa",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alarme ligado",
+        "func": "msg.payload = [{\n  measurement: \"estado_alarme\",\n  fields: { ativo: 1 },\n  tags: { origem: \"esp32\", tipo: \"alarme\" }\n}];\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 560,
+        "wires": [
+            [
+                "366d2570631a5185"
+            ]
+        ]
+    },
+    {
+        "id": "c1e4698de82718ae",
+        "type": "function",
+        "z": "e4c3d40f65b44d55",
+        "name": "Alarme desligado",
+        "func": "msg.payload = [{\n  measurement: \"estado_alarme\",\n  fields: { ativo: 0 },\n  tags: { origem: \"esp32\", tipo: \"alarme\" }\n}];\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 660,
+        "wires": [
+            [
+                "366d2570631a5185"
+            ]
+        ]
+    },
+    {
+        "id": "dd399c0a6b8173a5",
+        "type": "mqtt-broker",
+        "name": "broker.emqx.io:1883",
+        "broker": "broker.emqx.io",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "10",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "8",
+        "type": "ui_group",
+        "name": "Sensores e Controle",
+        "tab": "ce2e991dd4f0f537",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "336dadb703d0cd10",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "InfluxDB ",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://localhost:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "ce2e991dd4f0f537",
+        "type": "ui_tab",
+        "name": "Painel de Controlo",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

@@ -86,7 +86,7 @@ void callback(char* topic, byte* payload, unsigned int length){
 
   String topicStr = String(topic);
   if (String(topic) == "IPB/IoT/54448_54944/ponto1/control") {
-    if (message.indexOf("ALARM_ON") >= 0) { //procura a palavra chave na mensagem
+    if (message.indexOf("ALARM_ON") >= 0) { 
       Alarm = true;
     } else if (message.indexOf("ALARM_OFF") >= 0) {
       Alarm = false;
@@ -105,7 +105,6 @@ void loop() {
   TempAndHumidity data = dhtSensor.getTempAndHumidity();
   int sensorFumo = analogRead(SMOKE_PIN);
 
-  //Ligar/desligar Led e Buzzer
   if (Alarm) {
     digitalWrite(LED_PIN, HIGH);
     digitalWrite(BUZZER_PIN, HIGH);
@@ -116,7 +115,6 @@ void loop() {
     Serial.println(">> Alarme inativo: LED e buzzer desligados");
   }
 
-  // Construir JSON
   String json = "{";
   json += "\"temperatura\":" + String(data.temperature, 2) + ",";
   json += "\"humidade\":" + String(data.humidity, 1) + ",";

@@ -1,0 +1,3 @@
+from(bucket: "Projeto_incendio")
+  |> range(start: -1h)
+  |> filter(fn: (r) => r._measurement == "estado_alarme" and r._field == "ativo")

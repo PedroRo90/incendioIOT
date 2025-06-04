@@ -1,0 +1,5 @@
+msg.coordenadas = `${msg.payload.lat}, ${msg.payload.lon}`;
+msg.temperatura = msg.payload.temperatura;
+msg.humidade = msg.payload.humidade;
+msg.gas = msg.payload.gas;
+return msg;

@@ -1,0 +1,5 @@
+msg.payload = `ALERTA!
+Temperatura: ${msg.temperatura} °C
+Gás: ${msg.gas} ppm;
+Local: ${msg.coordenadas}`;
+return msg;
