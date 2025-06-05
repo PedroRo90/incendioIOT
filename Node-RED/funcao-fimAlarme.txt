@@ -9,7 +9,7 @@ if ((temperatura === undefined || temperatura < 40) && (gas === undefined || gas
     let duracao = ((fim - inicio) / 1000).toFixed(1);
 
     let mensagem = {
-        payload: `Alarme TERMINADO às ${new Date().toLocaleString()} (Duração: ${duracao} segundos)`
+        payload: `ALARM_OFF, Alarme TERMINADO às ${new Date().toLocaleString()} (Duração: ${duracao} segundos)`
     };
 
     flow.set("inicio", null);
