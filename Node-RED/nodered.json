@@ -380,7 +380,7 @@
         "type": "function",
         "z": "e4c3d40f65b44d55",
         "name": "Fim do alarme",
-        "func": "let inicio = flow.get(\"inicio\");\nif (!inicio) return null;\n\nlet temperatura = msg.temperatura;\nlet gas = msg.gas;\n\nif ((temperatura === undefined || temperatura < 40) && (gas === undefined || gas < 2000)) {\n    let fim = new Date().getTime();\n    let duracao = ((fim - inicio) / 1000).toFixed(1);\n\n    let mensagem = {\n        payload: `Alarme TERMINADO às ${new Date().toLocaleString()} (Duração: ${duracao} segundos)`\n    };\n\n    flow.set(\"inicio\", null);\n\n    let mqtt = {\n        payload: \"ALARM_OFF\",\n        topic: \"IPB/IoT/54448_54944/ponto1/control\"\n    };\n\n    return [mensagem, mqtt];\n}\n\nreturn null;\n",
+        "func": "let inicio = flow.get(\"inicio\");\nif (!inicio) return null;\n\nlet temperatura = msg.temperatura;\nlet gas = msg.gas;\n\nif ((temperatura === undefined || temperatura < 40) && (gas === undefined || gas < 2000)) {\n    let fim = new Date().getTime();\n    let duracao = ((fim - inicio) / 1000).toFixed(1);\n\n    let mensagem = {\n        payload: `ALARM_OFF, Alarme TERMINADO às ${new Date().toLocaleString()} (Duração: ${duracao} segundos)`\n    };\n\n    flow.set(\"inicio\", null);\n\n    let mqtt = {\n        payload: \"ALARM_OFF\",\n        topic: \"IPB/IoT/54448_54944/ponto1/control\"\n    };\n\n    return [mensagem, mqtt];\n}\n\nreturn null;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -493,7 +493,7 @@
         "useDifferentColor": false,
         "className": "",
         "x": 1140,
-        "y": 120,
+        "y": 140,
         "wires": [
             []
         ]
